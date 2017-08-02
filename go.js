@@ -42,6 +42,19 @@ const go = (_self, done) => {
 
     assert.ok(self.request, `${method}: expected self.request`);
 
+    if (self.cached_result) {
+        console.log("-", "GO USE CACHED RESULT")
+        return done(null, self);
+    }
+
+    const _done = (error, sd) => {
+        if (self.cache) {
+            self.cache.save(error, sd, done)
+        } else {
+            done(error, sd);
+        }
+    }
+
     self.request
         .end(result => {
             result.request = result.request || self.request;
@@ -60,16 +73,16 @@ const go = (_self, done) => {
                     error = new errors.HostNotFound()
                     error.self = self;
 
-                    return done(error)
+                    return _done(error)
                 }
 
                 error.statusCode = error.status;
                 error.self = self;
 
-                return done(error)
+                return _done(error)
             }
 
-            return done(null, self)
+            return _done(null, self)
         })
 }
 

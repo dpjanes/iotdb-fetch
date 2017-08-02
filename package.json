@@ -4,6 +4,7 @@
         "url": "https://github.com/dpjanes/iotdb-fetch/issues"
     }, 
     "dependencies": {
+        "mkdirp": "",
         "bluebird-q": "~2.1.1", 
         "content-type": "~1.0.2", 
         "iotdb-errors": "~3.0.5", 

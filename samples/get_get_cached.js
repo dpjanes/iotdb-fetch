@@ -1,9 +1,9 @@
 /*
- *  index.js
+ *  samples/get_get.js
  *
  *  David Janes
  *  IOTDB.org
- *  2017-08-01
+ *  2017-08-02
  *
  *  Copyright [2013-2016] [David P. Janes]
  *
@@ -22,14 +22,33 @@
 
 "use strict";
 
-module.exports = Object.assign(
-    {},
-    require("./get"),
-    require("./go"),
-    {
-        cache: {
-            memory: require("./cache_memory").cache_memory,
-        },
-    },
-    {}
-);
+const _ = require("iotdb-helpers")
+
+const fetch = require("..")
+
+const Q = require("bluebird-q");
+
+/**
+ *  Straight up get
+ */
+Q({
+    url: "http://www.davidjanes.com",
+})
+    .then(fetch.get)
+    .then(fetch.cache.memory)
+    .then(fetch.go)
+
+    .then(sd => _.d.update(sd, {
+        url: "http://www.davidjanes.com",
+    }))
+    .then(fetch.get)
+    .then(fetch.cache.memory)
+    .then(fetch.go)
+
+
+    .then(sd => {
+        console.log("+", "final url", sd.url, sd.document_length)
+    })
+    .catch(error => {
+        console.log("#", error)
+    })
