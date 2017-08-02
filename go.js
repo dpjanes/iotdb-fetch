@@ -27,6 +27,7 @@ const errors = require("iotdb-errors");
 
 const unirest = require("unirest");
 const Q = require("bluebird-q");
+const content_type = require("content-type")
 
 const assert = require("assert");
 
@@ -48,8 +49,8 @@ const go = (_self, done) => {
 
             self.url = result.request.href || self.url;
             self.document = result.raw_body || null;
-            self.document_media_type = result.headers['content-type'] || "application/octet-stream"
             self.document_length = _.coerce.to.Integer(result.headers['content-length'], 0)
+            self.document_media_type = content_type.parse(result.headers['content-type'] || "application/octet-stream").type
             self.document_encoding = null;
 
             if (result.error) {
@@ -66,7 +67,6 @@ const go = (_self, done) => {
                 error.self = self;
 
                 return done(error)
-            
             }
 
             return done(null, self)
