@@ -30,6 +30,11 @@ const Q = require("bluebird-q");
 
 const assert = require("assert");
 
+/**
+ *  Note that when errors are returned, the "self"
+ *  object with the best result when can get will
+ *  still be available.
+ */
 const go = (_self, done) => {
     const self = _.d.clone.shallow(_self)
     const method = "go";
@@ -38,19 +43,33 @@ const go = (_self, done) => {
 
     self.request
         .end(result => {
-            if (result.error) {
-                console.log("#", "GET", result.status, result.error, typeof result.error)
-                done(null, self)
-                return
-            }
+            result.request = result.request || self.request;
+            result.headers = result.headers || {};
 
             self.url = result.request.href || self.url;
-            self.document = result.raw_body;
+            self.document = result.raw_body || null;
             self.document_media_type = result.headers['content-type'] || "application/octet-stream"
-            self.document_length = _.coerce.to.Integer(result.headers['content-length'], "application/octet-stream")
+            self.document_length = _.coerce.to.Integer(result.headers['content-length'], 0)
             self.document_encoding = null;
 
-            done(null, self)
+            if (result.error) {
+                let error = result.error;
+
+                if (result.error.code === 'ENOTFOUND') {
+                    error = new errors.HostNotFound()
+                    error.self = self;
+
+                    return done(error)
+                }
+
+                error.statusCode = error.status;
+                error.self = self;
+
+                return done(error)
+            
+            }
+
+            return done(null, self)
         })
 }
 
