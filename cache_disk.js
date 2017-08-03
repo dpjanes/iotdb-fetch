@@ -24,16 +24,19 @@
 
 const _ = require("iotdb-helpers");
 const errors = require("iotdb-errors");
+const fs = require("iotdb-fs");
 
 const unirest = require("unirest");
 const Q = require("bluebird-q");
 const content_type = require("content-type")
 const canonical_json = require("canonical-json");
-const mkdirp = require("mkdirp");
 
 const assert = require("assert");
 const crypto = require("crypto");
 const path = require("path");
+const os = require("os");
+
+const LOG = _.noop;
 
 /**
  */
@@ -56,6 +59,8 @@ const __add_hash = (_self, done) => {
     self.url_hash = hasher.digest("hex")
     self.url_path = path.join(os.homedir(), ".iotdb-fetch", self.url_hash.substring(0, 2), self.url_hash)
 
+    LOG("HERE:HASH", self.url, self.url_hash, self.url_path)
+
     done(null, self);
 }
 const _add_hash = Q.denodeify(__add_hash);
@@ -71,7 +76,11 @@ const __cache_get = (_self, done) => {
             otherwise: null,
             path: self.url_path,
         }))
-        .then(iotdb_fs.read.json)
+        .then(fs.read.json)
+        .then(sd => {
+            // LOG("HERE:XXX", self.url_path, sd.json)
+            return sd;
+        })
         .then(sd => done(null, sd))
         .catch(done)
 }
@@ -86,7 +95,8 @@ const __cache_put = (_self, done) => {
         .then(sd => _.d.update(sd, {
             path: self.url_path,
         }))
-        .then(iotdb_fs.write.json)
+        .then(fs.mkdir.parent)
+        .then(fs.write.json)
         .then(sd => done(null, sd))
         .catch(done)
 }
@@ -107,7 +117,7 @@ const __cache_merge = (_self, done) => {
         error.cacher_self = self;
         error.cacher_self.cached_date = self.json.when;
 
-        console.log("-", "DISK_CACHER ERROR HIT", self.url_hash);
+        LOG("-", "DISK_CACHER ERROR HIT", self.url_hash);
 
         return done(error)
     }
@@ -115,7 +125,7 @@ const __cache_merge = (_self, done) => {
     Object.assign(self, self.json.self)
     self.cached_date = self.json.when;
 
-    console.log("-", "DISK_CACHER HIT", self.url_hash);
+    LOG("-", "DISK_CACHER HIT", self.url_hash);
     return done(null, self)
 }
 const _cache_merge = Q.denodeify(__cache_merge);
@@ -125,12 +135,15 @@ const _cache_merge = Q.denodeify(__cache_merge);
 const __expire_cache_minimum = (_self, done) => {
     const self = _.d.clone.shallow(_self);
 
+    LOG("HERE:XXX.1")
     if (self.json) {
         const now = new Date().getTime();
         const cache_minimum_ms = (self.cache_minimum || 3 * 60) * 1000;
-        const when_minimum_ms = cd.when + cache_minimum_ms;
+        const when_minimum_ms = self.json.when + cache_minimum_ms;
 
+        LOG("HERE:XXX.2", (now - when_minimum_ms) / 1000)
         if (now > when_minimum_ms) {
+            LOG("HERE:XXX.3 - EXPIRE")
             self.json = null;
         }
     }
@@ -147,7 +160,7 @@ const __expire_cache_maximum = (_self, done) => {
     if (self.json) {
         const now = new Date().getTime();
         const cache_maximum_ms = (self.cache_maximum || 1 * 24 * 60 * 60) * 1000;
-        const when_maximum_ms = cd.when + cache_maximum_ms;
+        const when_maximum_ms = self.json.when + cache_maximum_ms;
 
         if (now > when_maximum_ms) {
             self.json = null;
@@ -176,7 +189,16 @@ const _cacher = _outer_self => {
             .then(_expire_cache_minimum)
             .then(_cache_merge)
             .then(sd => {
-                console.log("DISK_CACHER", "GO", sd.url_hash, sd.cached_date)
+                if (sd.cached_date) {
+                    self.cached_date = sd.cached_date;
+                } else {
+                    self.url_path = sd.url_path;
+                    self.url_hash = sd.url_hash;
+                }
+                LOG("DISK_CACHER", "GO", sd.url_hash, sd.cached_date)
+                LOG("GO.A", self.url)
+                LOG("GO.A", self.url_path)
+                LOG("GO.A", self.url_hash)
 
                 done(null, self)
             })
@@ -186,18 +208,22 @@ const _cacher = _outer_self => {
     cacher_self.save = (_result_error, _self, done) => {
         const self = _self || _result_error.self;
 
+        LOG("SAVE.A", self.url)
+        LOG("SAVE.A", self.url_path)
+        LOG("SAVE.A", self.url_hash)
         /*
          *  The magic: if there's an error but we have a 
          *  cached result, we can just use the cached result
          */
         if (_result_error) {
             Q(self)
-                .then(_add_hash)
+                // .then(_add_hash)
                 .then(_cache_get)
                 .then(_expire_cache_maximum)
                 .then(_cache_merge)
                 .then(sd => {
-                    console.log("DISK_CACHER", "GO(RECOVERY)", sd.url_hash, sd.cached_date)
+                    LOG("DISK_CACHER", "SAVE(RECOVERY)", sd.url_hash, sd.cached_date)
+                    done(null, sd)
                 })
                 .catch(done)
 
@@ -226,10 +252,10 @@ const _cacher = _outer_self => {
         }
         Q(self)
             .then(sd => _.d.add(sd, "json", cd))
-            .then(_add_hash)
+            // .then(_add_hash)
             .then(_cache_put)
             .then(sd => {
-                console.log("DISK_CACHER", "GO(OK)", sd.url_hash, sd.cached_date)
+                LOG("DISK_CACHER", "SAVE(OK)", sd.url_hash, sd.cached_date)
                 done(null, sd)
             })
             .catch(done)
