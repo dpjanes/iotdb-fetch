@@ -4,14 +4,15 @@
         "url": "https://github.com/dpjanes/iotdb-fetch/issues"
     }, 
     "dependencies": {
-        "mkdirp": "",
         "bluebird-q": "~2.1.1", 
+        "canonical-json": "~0.0.4", 
         "content-type": "~1.0.2", 
         "iotdb-errors": "~3.0.5", 
-        "iotdb-helpers": "~3.0.35", 
+        "iotdb-fs": "~1.0.2", 
+        "iotdb-helpers": "~3.0.36", 
         "unirest": "~0.5.1"
     }, 
-    "description": "IOTDB Module", 
+    "description": "Pipe oriented URL functions", 
     "devDependencies": {
         "grunt": "~1.0.1", 
         "grunt-contrib-jshint": "~1.1.0", 
@@ -36,5 +37,5 @@
     "scripts": {
         "test": "grunt"
     }, 
-    "version": "0.0.0"
+    "version": "1.0.0"
 }
