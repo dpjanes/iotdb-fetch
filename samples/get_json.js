@@ -1,5 +1,5 @@
 /*
- *  samples/get_get_disk.js
+ *  samples/get_get.js
  *
  *  David Janes
  *  IOTDB.org
@@ -22,8 +22,6 @@
 
 "use strict";
 
-const _ = require("iotdb-helpers")
-
 const fetch = require("..")
 
 const Q = require("bluebird-q");
@@ -32,25 +30,13 @@ const Q = require("bluebird-q");
  *  Straight up get
  */
 Q({
-    url: "http://www.example.com",
+    url: "https://jsonplaceholder.typicode.com/posts/1",
 })
     .then(fetch.get)
     .then(fetch.cache.disk)
-    .then(fetch.go)
-
-    /*
-
-    .then(sd => _.d.update(sd, {
-        url: "http://www.davidjanes.com",
-    }))
-    .then(fetch.get)
-    .then(fetch.cache.disk)
-    .then(fetch.go)
-    */
-
+    .then(fetch.go.json)
     .then(sd => {
-        console.log("+", "final url", sd.url, sd.document_length)
-        console.log(sd)
+        console.log("+", "final url", sd.url, sd.json)
     })
     .catch(error => {
         console.log("#", error)

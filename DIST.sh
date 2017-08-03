@@ -6,7 +6,6 @@
 #   2017-08-01
 #
 
-exit 0
 PACKAGE=iotdb-fetch
 DIST_ROOT=/var/tmp/.dist.$$
 
