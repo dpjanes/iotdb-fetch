@@ -29,6 +29,7 @@ module.exports = Object.assign(
     {
         cache: {
             memory: require("./cache_memory").cache_memory,
+            disk: require("./cache_disk").cache_memory,
         },
     },
     {}

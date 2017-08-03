@@ -3,7 +3,7 @@
  *
  *  David Janes
  *  IOTDB.org
- *  2017-08-01
+ *  2017-08-02
  *
  *  Copyright [2013-2017] [David P. Janes]
  *
@@ -37,56 +37,97 @@ const crypto = require("crypto");
 const cdd = {};
 
 const _cacher = _outer_self => {
-    const self = Object.assign({})
+    const cacher_self = Object.assign({})
     const outer_self = _.d.clone.shallow(_outer_self)
 
-    self.go = (_request_self, done) => {
-        const request_self = _.d.clone.shallow(_request_self)
+    cacher_self.go = (_self, done) => {
+        const self = _.d.clone.shallow(_self)
 
         const hasher = crypto.createHash("md5");
-        hasher.update(request_self.url)
+        hasher.update(self.url)
         hasher.update("@@")
-        hasher.update(canonical_json(request_self.query || {}))
+        hasher.update(canonical_json(self.query || {}))
 
-        request_self.url_hash = hasher.digest("hex")
+        self.url_hash = hasher.digest("hex")
 
-        const cd = cdd[request_self.url_hash];
+        const cd = cdd[self.url_hash];
         if (cd) {
+            const now = new Date().getTime();
+            const cache_minimum_ms = (self.cache_minimum || 3 * 60) * 1000;
+            const when_minimum_ms = cd.when + cache_minimum_ms;
+            const cache_maximum_ms = (self.cache_maximum || 1 * 24 * 60 * 60) * 1000;
+            const when_maximum_ms = cd.when + cache_maximum_ms;
+
+            if (now > when_minimum_ms) {
+                console.log("-", "CACHE EXPIRED", self.url_hash);
+                return done(null, self)
+            }
+
             if (cd.error) {
                 const error = new Error();
                 error = Object.assign(error, cd.error)
-                error.self = request_self;
-                error.self.cached_result = true;
+                error.cacher_self = self;
+                error.cacher_self.cached_date = cd.when;
 
-                console.log("-", "CACHE ERROR HIT", request_self.url_hash);
+                console.log("-", "CACHE ERROR HIT", self.url_hash);
                 return done(error)
             }
 
-            Object.assign(request_self, cd.self)
-            request_self.cached_result = true;
+            Object.assign(self, cd.cacher_self)
+            self.cached_date = cd.when;
 
-            console.log("-", "CACHE HIT", request_self.url_hash);
-            return done(null, request_self)
+            console.log("-", "CACHE HIT", self.url_hash);
+            return done(null, self)
 
         }
 
-        self.cached_result = false;
+        cacher_self.cached_date = null;
 
-        console.log("MEMORY_CACHER", "GO", request_self.url_hash)
+        console.log("MEMORY_CACHER", "GO", self.url_hash)
 
-        done(null, request_self)
+        done(null, self)
     }
 
-    self.save = (_result_error, _result_self, done) => {
-        const rs = _result_self || _result_error.self;
+    cacher_self.save = (_result_error, _self, done) => {
+        const self = _self || _result_error.self;
 
-        const cd = {
+        /*
+         *  The magic: if there's an error but we have a 
+         *  cached result, we can just use the cached result
+         */
+        let cd = cdd[self.url_hash];
+        if (_result_error && cd) {
+            const now = new Date().getTime();
+            const cache_minimum_ms = (self.cache_minimum || 3 * 60) * 1000;
+            const when_minimum_ms = cd.when + cache_minimum_ms;
+            const cache_maximum_ms = (self.cache_maximum || 1 * 24 * 60 * 60) * 1000;
+            const when_maximum_ms = cd.when + cache_maximum_ms;
+
+            if (now > when_maximum_ms) {
+                console.log("-", "CACHED TOO LONG", self.url_hash);
+                return done(null, self)
+            }
+
+            // don't recycle an error, just use what we got
+            if (cd.error) {
+                return done(_result_error);
+            }
+
+            Object.assign(self, cd.cacher_self)
+            self.cached_date = cd.when;
+
+            console.log("-", "CACHE HIT ON ERROR", self.url_hash);
+            return done(null, self)
+        }
+
+        cd = {
+            when: new Date().getTime(),
             self: {
-                document: rs.document,
-                url: rs.url,
-                document_length: rs.document_length,
-                document_media_type: rs.document_media_type,
-                document_encoding: rs.document_encoding,
+                document: self.document,
+                url: self.url,
+                document_length: self.document_length,
+                document_media_type: self.document_media_type,
+                document_encoding: self.document_encoding,
             },
         }
 
@@ -97,13 +138,13 @@ const _cacher = _outer_self => {
             }
         }
 
-        cdd[_result_self.url_hash] = cd;
+        cdd[_self.url_hash] = cd;
 
-        console.log("MEMORY_CACHER", "SAVE", _result_self.url_hash);
-        done(_result_error, _result_self)
+        console.log("MEMORY_CACHER", "SAVE", _self.url_hash);
+        done(_result_error, _self)
     }
 
-    return self;
+    return cacher_self;
 }
 
 /**

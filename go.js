@@ -42,7 +42,7 @@ const go = (_self, done) => {
 
     assert.ok(self.request, `${method}: expected self.request`);
 
-    if (self.cached_result) {
+    if (self.cached_date) {
         console.log("-", "GO USE CACHED RESULT")
         return done(null, self);
     }
