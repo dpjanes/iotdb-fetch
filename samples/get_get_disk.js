@@ -32,7 +32,7 @@ const Q = require("bluebird-q");
  *  Straight up get
  */
 Q({
-    url: "http://www.example.com",
+    url: "http://www.davidjanes.com",
 })
     .then(fetch.get)
     .then(fetch.cache.disk)

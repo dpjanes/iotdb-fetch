@@ -30,7 +30,7 @@ const Q = require("bluebird-q");
  *  Straight up get
  */
 Q({
-    url: "http://example.com",
+    url: "http://www.davidjanes.com",
 })
     .then(fetch.get)
     .then(fetch.go)
