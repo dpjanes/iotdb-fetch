@@ -5,10 +5,10 @@
     }, 
     "dependencies": {
         "canonical-json": "~0.0.4", 
-        "content-type": "~1.0.2", 
-        "iotdb-errors": "~3.0.5", 
-        "iotdb-fs": "~1.0.2", 
-        "iotdb-helpers": "~3.0.36", 
+        "content-type": "~1.0.4", 
+        "iotdb-errors": "~3.0.6", 
+        "iotdb-fs": "~1.0.9", 
+        "iotdb-helpers": "~3.1.6", 
         "unirest": "~0.5.1"
     }, 
     "description": "Pipe oriented URL functions with caching", 
@@ -16,12 +16,12 @@
         "grunt": "~1.0.1", 
         "grunt-contrib-jshint": "~1.1.0", 
         "grunt-contrib-nodeunit": "~1.0.0", 
-        "grunt-contrib-uglify": "~3.0.1", 
+        "grunt-contrib-uglify": "~3.1.0", 
         "grunt-contrib-watch": "~1.0.0", 
         "grunt-jsbeautifier": "~0.2.13", 
         "jshint-stylish": "~2.2.1", 
         "load-grunt-tasks": "~3.5.2", 
-        "request": "~2.81.0"
+        "request": "~2.83.0"
     }, 
     "homepage": "https://github.com/dpjanes/node-iotdb", 
     "license": "Apache-2.0", 
@@ -35,5 +35,5 @@
     "scripts": {
         "test": "grunt"
     }, 
-    "version": "1.0.1"
+    "version": "1.0.2"
 }
