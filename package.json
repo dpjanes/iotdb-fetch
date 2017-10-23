@@ -7,7 +7,7 @@
         "canonical-json": "~0.0.4", 
         "content-type": "~1.0.4", 
         "iotdb-errors": "~3.0.6", 
-        "iotdb-fs": "~1.0.9", 
+        "iotdb-fs": "~1.0.10", 
         "iotdb-helpers": "~3.1.6", 
         "unirest": "~0.5.1"
     }, 
@@ -35,5 +35,5 @@
     "scripts": {
         "test": "grunt"
     }, 
-    "version": "1.0.2"
+    "version": "1.0.3"
 }
