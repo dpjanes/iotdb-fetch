@@ -1,9 +1,9 @@
 /*
- *  lib/index.js
+ *  samples/post_json.js
  *
  *  David Janes
  *  IOTDB.org
- *  2017-08-01
+ *  2017-09-03
  *
  *  Copyright [2013-2017] [David P. Janes]
  *
@@ -22,20 +22,21 @@
 
 "use strict";
 
-module.exports = Object.assign(
-    {},
-    require("./get"),
-    require("./patch"),
-    require("./put"),
-    require("./post"),
-    require("./delete"),
-    require("./headers"),
-    require("./go"),
-    {
-        cache: {
-            memory: require("./cache_memory").cache_memory,
-            disk: require("./cache_disk").cache_disk,
-        },
-    },
-    {}
-);
+const fetch = require("..")
+
+const Q = require("bluebird-q");
+
+/**
+ *  Straight up get
+ */
+Q({
+    url: "https://jsonplaceholder.typicode.com/posts",
+})
+    .then(fetch.post)
+    .then(fetch.go.json)
+    .then(sd => {
+        console.log("+", "final url", sd.url, sd.json)
+    })
+    .catch(error => {
+        console.log("#", error)
+    })
