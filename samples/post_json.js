@@ -22,20 +22,26 @@
 
 "use strict";
 
+const _ = require("iotdb-helpers");
 const fetch = require("..")
 
-
 /**
- *  Straight up get
+ *  POST with JSON payload
  */
 _.promise.make({
     url: "https://jsonplaceholder.typicode.com/posts",
+    json: {
+        a: 1,
+        b: "two",
+        c: [ 3, "four", ],
+    },
 })
     .then(fetch.post)
+    .then(fetch.body.json)
     .then(fetch.go.json)
-    .then(sd => {
+    .then(_.promise.make(sd => {
         console.log("+", "final url", sd.url, sd.json)
-    })
+    }))
     .catch(error => {
         console.log("#", error)
     })
