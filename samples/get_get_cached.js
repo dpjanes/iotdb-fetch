@@ -26,12 +26,11 @@ const _ = require("iotdb-helpers")
 
 const fetch = require("..")
 
-const Q = require("bluebird-q");
 
 /**
  *  Straight up get
  */
-Q({
+_.promise.make({
     url: "http://www.davidjanes.com",
 })
     .then(fetch.get)

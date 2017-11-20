@@ -24,12 +24,11 @@
 
 const fetch = require("..")
 
-const Q = require("bluebird-q");
 
 /**
  *  Demonstrate adding query parameters to a URL
  */
-Q({
+_.promise.make({
     url: "http://www.davidjanes.com/doesnotexist",
 })
     .then(fetch.get)

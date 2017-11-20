@@ -24,12 +24,11 @@
 
 const fetch = require("..")
 
-const Q = require("bluebird-q");
 
 /**
  *  Straight up get
  */
-Q({
+_.promise.make({
     url: "https://jsonplaceholder.typicode.com/posts/1",
 })
     .then(fetch.get)

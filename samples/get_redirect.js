@@ -24,12 +24,11 @@
 
 const fetch = require("..")
 
-const Q = require("bluebird-q");
 
 /**
  *  Demonstrate the URL changing on a redirect
  */
-Q({
+_.promise.make({
     url: "http://dev.consensas.com",
 })
     .then(fetch.get)
