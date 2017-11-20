@@ -30,7 +30,8 @@ const fetch = require("..")
  *  POST with JSON payload
  */
 _.promise.make({
-    url: "https://jsonplaceholder.typicode.com/posts",
+    // url: "https://jsonplaceholder.typicode.com/posts",
+    url: "http://mockbin.com/request",
     json: {
         a: 1,
         b: "two",
