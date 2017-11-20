@@ -22,8 +22,9 @@
 
 "use strict";
 
-const fetch = require("..")
+const _ = require("iotdb-helpers");
 
+const fetch = require("..")
 
 /**
  *  Demonstrate the URL changing on a redirect

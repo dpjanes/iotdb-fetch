@@ -26,7 +26,6 @@ const _ = require("iotdb-helpers")
 
 const fetch = require("..")
 
-
 /**
  *  Straight up get
  */

@@ -22,8 +22,9 @@
 
 "use strict";
 
-const fetch = require("..")
+const _ = require("iotdb-helpers");
 
+const fetch = require("..")
 
 /**
  *  URL does not exist

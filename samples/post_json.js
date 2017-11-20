@@ -23,6 +23,7 @@
 "use strict";
 
 const _ = require("iotdb-helpers");
+
 const fetch = require("..")
 
 /**
