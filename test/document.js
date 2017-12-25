@@ -372,6 +372,27 @@ describe("document", function() {
                 .catch(done)
         })
     })
+    describe("delete", function() {
+        it("works - just URL", function(done) {
+            _.promise.make(self)
+                .then(fetch.document.delete({
+                    url: self.server_url + "/index.html",
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (DELETE)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "DELETE");
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+    })
     describe("post", function() {
         it("works - just URL", function(done) {
             _.promise.make(self)
