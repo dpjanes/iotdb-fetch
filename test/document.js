@@ -63,6 +63,7 @@ describe("document", function() {
             _.promise.make(self)
                 .then(fetch.document(self.server_url + "/index.html"))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -82,6 +83,7 @@ describe("document", function() {
                     url: self.server_url + "/index.html",
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -101,6 +103,7 @@ describe("document", function() {
                     url: self.server_url + "/index.txt",
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("index.txt (GET)") > -1)
                     assert.deepEqual(sd.document_media_type, "text/plain")
                     assert.deepEqual(sd.document_name, "index.txt")
@@ -121,6 +124,7 @@ describe("document", function() {
                     accept: "text/html",
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -143,6 +147,7 @@ describe("document", function() {
                     }
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("index.txt (GET)") > -1)
                     assert.deepEqual(sd.document_media_type, "text/plain")
                     assert.deepEqual(sd.document_name, "index.plain")   // BLECH - needs to be fixed
@@ -162,6 +167,7 @@ describe("document", function() {
                     url: self.server_url + "/index.html?a=b",
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -185,6 +191,7 @@ describe("document", function() {
                     }
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -208,6 +215,7 @@ describe("document", function() {
                     }
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -229,6 +237,7 @@ describe("document", function() {
                     bearer_token: "abcde",
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -251,6 +260,7 @@ describe("document", function() {
                     url: self.server_url + "/index.html",
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (PUT)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -273,6 +283,7 @@ describe("document", function() {
                     },
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (PUT)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -297,6 +308,7 @@ describe("document", function() {
                     },
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (PUT)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -320,6 +332,7 @@ describe("document", function() {
                     url: self.server_url + "/index.html",
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (PATCH)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -342,6 +355,7 @@ describe("document", function() {
                     },
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (PATCH)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -366,6 +380,7 @@ describe("document", function() {
                     },
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (PATCH)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -389,6 +404,7 @@ describe("document", function() {
                     url: self.server_url + "/index.html",
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (DELETE)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -410,6 +426,7 @@ describe("document", function() {
                     url: self.server_url + "/index.html",
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -432,6 +449,7 @@ describe("document", function() {
                     },
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -456,6 +474,7 @@ describe("document", function() {
                     },
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -479,6 +498,7 @@ describe("document", function() {
                     attachment: true,
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -502,6 +522,7 @@ describe("document", function() {
                     attachment: true,
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")
@@ -525,6 +546,7 @@ describe("document", function() {
                     attachment: true,
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
                     assert.deepEqual(sd.document_media_type, "text/html")
                     assert.deepEqual(sd.document_name, "index.html")

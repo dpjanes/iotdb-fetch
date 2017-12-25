@@ -63,6 +63,7 @@ describe("document", function() {
             _.promise.make(self)
                 .then(fetch.json(self.server_url + "/index.json"))
                 .then(_.promise.make(sd => {
+                    assert.ok(_.is.AbsoluteURL(sd.url))
                     assert.deepEqual(sd.json, { method: 'GET', route: '/index.json' });
                 }))
                 .then(simulator.last_request)
@@ -80,6 +81,7 @@ describe("document", function() {
                     url: self.server_url + "/index.json",
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(_.is.AbsoluteURL(sd.url))
                     assert.deepEqual(sd.json, { method: 'GET', route: '/index.json' });
                 }))
                 .then(simulator.last_request)
@@ -98,6 +100,7 @@ describe("document", function() {
                     bearer_token: "abcde",
                 }))
                 .then(_.promise.make(sd => {
+                    assert.ok(_.is.AbsoluteURL(sd.url))
                     assert.deepEqual(sd.json, { method: 'GET', route: '/index.json' });
                 }))
                 .then(simulator.last_request)
