@@ -1,0 +1,5 @@
+{
+    "method": "HEAD",
+    "route": "/index.json"
+}
+

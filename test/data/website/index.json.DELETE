@@ -1,0 +1,5 @@
+{
+    "method": "DELETE",
+    "route": "/index.json"
+}
+
