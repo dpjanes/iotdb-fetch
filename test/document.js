@@ -24,14 +24,102 @@
 
 const _ = require("iotdb-helpers")
 const fetch = require("..")
+const simulator = require("iotdb-website-simulator")
+
 const assert = require("assert")
 
+const _util = require("./_util")
+
 describe("document", function() {
+    let self = {};
+
+    before(function(done) {
+        _.promise.make(self)
+            .then(_util.setup)
+            .then(_.promise.make(sd => self = sd))
+            .then(_.promise.done(done, self))
+            .catch(done)
+
+    })
+    after(function(done) {
+        _.promise.make(self)
+            .then(_util.teardown)
+            .then(_.promise.done(done, self))
+            .catch(done)
+    })
+
     describe("get", function() {
-        it("works", function(done) {
-            _.promise.make({})
-                .then(fetch.document("http://example.com"))
+        it("works - raw URL (HTML)", function(done) {
+            _.promise.make(self)
+                .then(fetch.document(self.server_url + "/index.html"))
                 .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "GET");
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - just URL (HTML)", function(done) {
+            _.promise.make(self)
+                .then(fetch.document({
+                    url: self.server_url + "/index.html",
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "GET");
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - just URL (TXT)", function(done) {
+            _.promise.make(self)
+                .then(fetch.document({
+                    url: self.server_url + "/index.txt",
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("index.txt (GET)") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/plain")
+                    assert.deepEqual(sd.document_name, "index.txt")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.txt")
+                    assert.deepEqual(sd.last_request.method, "GET");
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - root URL with Accept", function(done) {
+            _.promise.make(self)
+                .then(fetch.document({
+                    url: self.server_url,
+                    accepts: "text/html",
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "GET");
                 }))
                 .then(_.promise.done(done))
                 .catch(done)
