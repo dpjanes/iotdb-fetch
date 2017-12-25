@@ -146,5 +146,68 @@ describe("document", function() {
                 .then(_.promise.done(done))
                 .catch(done)
         })
+        it("works - URL with query string", function(done) {
+            _.promise.make(self)
+                .then(fetch.document({
+                    url: self.server_url + "/index.html?a=b",
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html?a=b")
+                    assert.deepEqual(sd.last_request.method, "GET");
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - URL with query object", function(done) {
+            _.promise.make(self)
+                .then(fetch.document({
+                    url: self.server_url + "/index.html",
+                    query: {
+                        "c": "d",
+                    }
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html?c=d")
+                    assert.deepEqual(sd.last_request.method, "GET");
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - URL with query string + query object", function(done) {
+            _.promise.make(self)
+                .then(fetch.document({
+                    url: self.server_url + "/index.html?a=b",
+                    query: {
+                        "c": "d",
+                    }
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html?a=b&c=d")
+                    assert.deepEqual(sd.last_request.method, "GET");
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
     })
 })
