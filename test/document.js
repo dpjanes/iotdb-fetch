@@ -108,7 +108,7 @@ describe("document", function() {
             _.promise.make(self)
                 .then(fetch.document({
                     url: self.server_url,
-                    accepts: "text/html",
+                    accept: "text/html",
                 }))
                 .then(_.promise.make(sd => {
                     assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
@@ -118,7 +118,29 @@ describe("document", function() {
                 .then(simulator.last_request)
                 .then(_.promise.make(sd => {
                     assert.ok(sd.last_request);
-                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.url, "/")
+                    assert.deepEqual(sd.last_request.method, "GET");
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - root URL with Accept as Headers", function(done) {
+            _.promise.make(self)
+                .then(fetch.document({
+                    url: self.server_url,
+                    headers: {
+                        accept: "text/plain",
+                    }
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("index.txt (GET)") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/plain")
+                    assert.deepEqual(sd.document_name, "index.plain")   // BLECH - needs to be fixed
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/")
                     assert.deepEqual(sd.last_request.method, "GET");
                 }))
                 .then(_.promise.done(done))
