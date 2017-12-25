@@ -234,4 +234,211 @@ describe("document", function() {
                 .catch(done)
         })
     })
+    describe("put", function() {
+        it("works - just URL", function(done) {
+            _.promise.make(self)
+                .then(fetch.document.put({
+                    url: self.server_url + "/index.html",
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (PUT)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "PUT");
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - form data", function(done) {
+            _.promise.make(self)
+                .then(fetch.document.put({
+                    url: self.server_url + "/index.html",
+                    form: {
+                        "hello": "world",
+                    },
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (PUT)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "PUT");
+                    assert.deepEqual(sd.last_request.body, { hello: 'world' });
+                    assert.deepEqual(sd.last_request.headers['content-type'], 'application/x-www-form-urlencoded')
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - JSON data", function(done) {
+            _.promise.make(self)
+                .then(fetch.document.put({
+                    url: self.server_url + "/index.html",
+                    json: {
+                        "hello": "world",
+                    },
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (PUT)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "PUT");
+                    assert.deepEqual(sd.last_request.body, { hello: 'world' });
+                    assert.deepEqual(sd.last_request.headers['content-type'], 'application/json')
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+    })
+    describe("patch", function() {
+        it("works - just URL", function(done) {
+            _.promise.make(self)
+                .then(fetch.document.patch({
+                    url: self.server_url + "/index.html",
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (PATCH)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "PATCH");
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - form data", function(done) {
+            _.promise.make(self)
+                .then(fetch.document.patch({
+                    url: self.server_url + "/index.html",
+                    form: {
+                        "hello": "world",
+                    },
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (PATCH)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "PATCH");
+                    assert.deepEqual(sd.last_request.body, { hello: 'world' });
+                    assert.deepEqual(sd.last_request.headers['content-type'], 'application/x-www-form-urlencoded')
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - JSON data", function(done) {
+            _.promise.make(self)
+                .then(fetch.document.patch({
+                    url: self.server_url + "/index.html",
+                    json: {
+                        "hello": "world",
+                    },
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (PATCH)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "PATCH");
+                    assert.deepEqual(sd.last_request.body, { hello: 'world' });
+                    assert.deepEqual(sd.last_request.headers['content-type'], 'application/json')
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+    })
+    describe("post", function() {
+        it("works - just URL", function(done) {
+            _.promise.make(self)
+                .then(fetch.document.post({
+                    url: self.server_url + "/index.html",
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "POST");
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - form data", function(done) {
+            _.promise.make(self)
+                .then(fetch.document.post({
+                    url: self.server_url + "/index.html",
+                    form: {
+                        "hello": "world",
+                    },
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "POST");
+                    assert.deepEqual(sd.last_request.body, { hello: 'world' });
+                    assert.deepEqual(sd.last_request.headers['content-type'], 'application/x-www-form-urlencoded')
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - JSON data", function(done) {
+            _.promise.make(self)
+                .then(fetch.document.post({
+                    url: self.server_url + "/index.html",
+                    json: {
+                        "hello": "world",
+                    },
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "POST");
+                    assert.deepEqual(sd.last_request.body, { hello: 'world' });
+                    assert.deepEqual(sd.last_request.headers['content-type'], 'application/json')
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+    })
 })
