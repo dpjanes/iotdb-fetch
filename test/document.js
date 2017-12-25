@@ -50,6 +50,14 @@ describe("document", function() {
             .catch(done)
     })
 
+    describe("bad", function() {
+        it("number", function(done) {
+            _.promise.make(self)
+                .then(fetch.document(10))
+                .then(_util.auto_fail(done))
+                .catch(_util.ok_error(done));
+        })
+    })
     describe("get", function() {
         it("works - raw URL (HTML)", function(done) {
             _.promise.make(self)
