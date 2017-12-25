@@ -161,6 +161,7 @@ describe("document", function() {
                     assert.ok(sd.last_request);
                     assert.deepEqual(sd.last_request.url, "/index.html?a=b")
                     assert.deepEqual(sd.last_request.method, "GET");
+                    assert.deepEqual(sd.last_request.query, { a: 'b', })
                 }))
                 .then(_.promise.done(done))
                 .catch(done)
@@ -183,6 +184,7 @@ describe("document", function() {
                     assert.ok(sd.last_request);
                     assert.deepEqual(sd.last_request.url, "/index.html?c=d")
                     assert.deepEqual(sd.last_request.method, "GET");
+                    assert.deepEqual(sd.last_request.query, { c: 'd' })
                 }))
                 .then(_.promise.done(done))
                 .catch(done)
@@ -205,6 +207,28 @@ describe("document", function() {
                     assert.ok(sd.last_request);
                     assert.deepEqual(sd.last_request.url, "/index.html?a=b&c=d")
                     assert.deepEqual(sd.last_request.method, "GET");
+                    assert.deepEqual(sd.last_request.query, { a: 'b', c: 'd' })
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - bearer token", function(done) {
+            _.promise.make(self)
+                .then(fetch.document({
+                    url: self.server_url + "/index.html",
+                    bearer_token: "abcde",
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "GET");
+                    assert.deepEqual(sd.last_request.headers.authorization, 'Bearer abcde')
                 }))
                 .then(_.promise.done(done))
                 .catch(done)

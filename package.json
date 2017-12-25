@@ -33,7 +33,8 @@
         "url": "https://github.com/dpjanes/iotdb-fetch"
     }, 
     "scripts": {
-        "test": "grunt"
+        "cover": "istanbul cover _mocha -- --recursive",
+        "test": "mocha"
     }, 
     "version": "1.0.10"
 }
