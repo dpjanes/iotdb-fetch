@@ -23,10 +23,12 @@
 "use strict";
 
 const _ = require("iotdb-helpers")
-const fetch = require("..")
+const fs = require("iotdb-fs")
 const simulator = require("iotdb-website-simulator")
+const fetch = require("..")
 
 const assert = require("assert")
+const path = require("path")
 
 const _util = require("./_util")
 
@@ -444,6 +446,29 @@ describe("document", function() {
                     json: {
                         "hello": "world",
                     },
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "POST");
+                    assert.deepEqual(sd.last_request.body, { hello: 'world' });
+                    assert.deepEqual(sd.last_request.headers['content-type'], 'application/json')
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - file (boolean flag, string)", function(done) {
+            _.promise.make(self)
+                .then(fs.read.utf8(path.join(__dirname, "data", "document.txt"))
+                .then(fetch.document.post({
+                    url: self.server_url + "/index.html",
+                    document: true,
                 }))
                 .then(_.promise.make(sd => {
                     assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
