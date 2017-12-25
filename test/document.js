@@ -463,12 +463,12 @@ describe("document", function() {
                 .then(_.promise.done(done))
                 .catch(done)
         })
-        it("works - file (boolean flag, string)", function(done) {
+        it("works - file (boolean flag, string text file)", function(done) {
             _.promise.make(self)
-                .then(fs.read.utf8(path.join(__dirname, "data", "document.txt"))
+                .then(fs.read.p(path.join(__dirname, "data", "document.txt"), "utf-8"))
                 .then(fetch.document.post({
                     url: self.server_url + "/index.html",
-                    document: true,
+                    attachment: true,
                 }))
                 .then(_.promise.make(sd => {
                     assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
@@ -480,8 +480,54 @@ describe("document", function() {
                     assert.ok(sd.last_request);
                     assert.deepEqual(sd.last_request.url, "/index.html")
                     assert.deepEqual(sd.last_request.method, "POST");
-                    assert.deepEqual(sd.last_request.body, { hello: 'world' });
-                    assert.deepEqual(sd.last_request.headers['content-type'], 'application/json')
+                    assert.deepEqual(sd.last_request.body, { 'document.txt': 'Hello, World\n' });
+                    assert.ok(sd.last_request.headers['content-type'].startsWith("multipart/form-data"))
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - file (boolean flag, buffer text file)", function(done) {
+            _.promise.make(self)
+                .then(fs.read.p(path.join(__dirname, "data", "document.txt")))
+                .then(fetch.document.post({
+                    url: self.server_url + "/index.html",
+                    attachment: true,
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "POST");
+                    assert.deepEqual(sd.last_request.body, { 'document.txt': 'Hello, World\n' });
+                    assert.ok(sd.last_request.headers['content-type'].startsWith("multipart/form-data"))
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
+        it("works - file (boolean flag, buffer image)", function(done) {
+            _.promise.make(self)
+                .then(fs.read.p(path.join(__dirname, "data", "image.png")))
+                .then(fetch.document.post({
+                    url: self.server_url + "/index.html",
+                    attachment: true,
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.document.indexOf("<h1>index.html (POST)</h1>") > -1)
+                    assert.deepEqual(sd.document_media_type, "text/html")
+                    assert.deepEqual(sd.document_name, "index.html")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/index.html")
+                    assert.deepEqual(sd.last_request.method, "POST");
+                    assert.ok(sd.last_request.body["image.png"])
+                    assert.ok(sd.last_request.headers['content-type'].startsWith("multipart/form-data"))
                 }))
                 .then(_.promise.done(done))
                 .catch(done)
