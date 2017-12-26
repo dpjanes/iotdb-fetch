@@ -8,7 +8,7 @@
         "content-type": "~1.0.4", 
         "iotdb-errors": "~3.0.6", 
         "iotdb-fs": "~1.0.25", 
-        "iotdb-helpers": "~3.1.23", 
+        "iotdb-helpers": "~3.1.24", 
         "unirest": "~0.5.1"
     }, 
     "description": "Pipe oriented URL functions with caching", 
@@ -33,8 +33,8 @@
         "url": "https://github.com/dpjanes/iotdb-fetch"
     }, 
     "scripts": {
-        "cover": "istanbul cover _mocha -- --recursive",
+        "cover": "istanbul cover _mocha -- --recursive", 
         "test": "mocha"
     }, 
-    "version": "1.0.10"
+    "version": "1.0.11"
 }
