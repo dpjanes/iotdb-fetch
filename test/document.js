@@ -495,7 +495,7 @@ describe("document", function() {
                 .then(fs.read.p(path.join(__dirname, "data", "document.txt"), "utf-8"))
                 .then(fetch.document.post({
                     url: self.server_url + "/index.html",
-                    attachment: true,
+                    document: true,
                 }))
                 .then(_.promise.make(sd => {
                     assert.ok(sd.url)
@@ -519,7 +519,7 @@ describe("document", function() {
                 .then(fs.read.p(path.join(__dirname, "data", "document.txt")))
                 .then(fetch.document.post({
                     url: self.server_url + "/index.html",
-                    attachment: true,
+                    document: true,
                 }))
                 .then(_.promise.make(sd => {
                     assert.ok(sd.url)
@@ -543,7 +543,7 @@ describe("document", function() {
                 .then(fs.read.p(path.join(__dirname, "data", "image.png")))
                 .then(fetch.document.post({
                     url: self.server_url + "/index.html",
-                    attachment: true,
+                    document: true,
                 }))
                 .then(_.promise.make(sd => {
                     assert.ok(sd.url)
