@@ -7,8 +7,8 @@
         "canonical-json": "~0.0.4", 
         "content-type": "~1.0.4", 
         "iotdb-errors": "~3.1.5", 
-        "iotdb-fs": "~1.0.26", 
-        "iotdb-helpers": "~3.1.29", 
+        "iotdb-fs": "~1.0.28", 
+        "iotdb-helpers": "~3.2.2", 
         "unirest": "~0.5.1"
     }, 
     "description": "Pipe oriented URL functions with caching", 
@@ -36,5 +36,5 @@
         "cover": "istanbul cover _mocha -- --recursive", 
         "test": "mocha"
     }, 
-    "version": "1.0.12"
+    "version": "1.0.13"
 }
