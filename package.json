@@ -8,7 +8,7 @@
         "content-type": "~1.0.4", 
         "iotdb-errors": "~3.1.6", 
         "iotdb-fs": "~1.0.30", 
-        "iotdb-helpers": "~3.2.9", 
+        "iotdb-helpers": "~3.2.12", 
         "unirest": "~0.5.1"
     }, 
     "description": "Pipe oriented URL functions with caching", 
@@ -36,5 +36,5 @@
         "cover": "istanbul cover _mocha -- --recursive", 
         "test": "mocha"
     }, 
-    "version": "1.0.14"
+    "version": "1.0.15"
 }
