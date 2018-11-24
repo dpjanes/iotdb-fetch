@@ -36,5 +36,5 @@
         "cover": "istanbul cover _mocha -- --recursive", 
         "test": "mocha"
     }, 
-    "version": "1.0.19"
+    "version": "1.0.20"
 }
