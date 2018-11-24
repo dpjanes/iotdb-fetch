@@ -117,6 +117,30 @@ describe("document", function() {
                 .then(_.promise.done(done))
                 .catch(done)
         })
+        it("works - just URL (PNG)", function(done) {
+            _.promise.make(self)
+                .then(fs.read.p(path.join(__dirname, "data", "image.png")))
+                .add("document:image")
+                .add("document", null)
+                .then(fetch.document({
+                    url: self.server_url + "/image.png",
+                }))
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.url)
+                    assert.ok(_.is.Buffer(sd.document))
+                    assert.ok(sd.document.equals(sd.image))
+                    assert.deepEqual(sd.document_media_type, "image/png")
+                    assert.deepEqual(sd.document_name, "image.png")
+                }))
+                .then(simulator.last_request)
+                .then(_.promise.make(sd => {
+                    assert.ok(sd.last_request);
+                    assert.deepEqual(sd.last_request.url, "/image.png")
+                    assert.deepEqual(sd.last_request.method, "GET");
+                }))
+                .then(_.promise.done(done))
+                .catch(done)
+        })
         it("works - root URL with Accept", function(done) {
             _.promise.make(self)
                 .then(fetch.document({
