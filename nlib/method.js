@@ -33,6 +33,7 @@ const method = METHOD => _.promise(self => {
         method: METHOD,
         url: self.url,
         query: self.query || {},
+        headers: {},
     }
 })
 

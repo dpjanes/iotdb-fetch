@@ -54,6 +54,7 @@ const go = _.promise((self, done) => {
 
     const options = {
         method: self.__fetch.method,
+        headers: self.__fetch.headers,
     }
 
     const request = processor.request(self.__fetch.url, options, response => {
@@ -116,17 +117,46 @@ const go = _.promise((self, done) => {
     request.end()
 })
 
-go.method = "method"
-go.description = `
-    Do a HTTP/HTTPS method (parameterized)`
+go.method = "go"
+go.description = `Actually do request`
 go.requires = {
     __fetch: {
         method: _.is.String,
         url: _.is.AbsoluteURL,
-        // query: [ _.is.Dictionary, _.is.Null ],
+    },
+}
+
+/**
+ */
+const go_json = _.promise((self, done) => {
+    _.promise.validate(self, go_json)
+
+    _.promise(self)
+        .make(sd => {
+            self.__fetch.headers["content-type"] = "application/json"
+            sd.json = null;
+        })
+        .then(go)
+        .make(sd => {
+            if (Math.floor(sd.headers.status / 100) === 3) {
+                return
+            }
+
+            sd.json = JSON.parse(sd.document)
+        })
+        .end(done, self, "json,headers,url")
+})
+
+go_json.method = "go"
+go_json.description = `Do JSON request`
+go_json.requires = {
+    __fetch: {
+        method: _.is.String,
+        url: _.is.AbsoluteURL,
     },
 }
 
 /**
  */
 exports.go = go
+exports.go.json = go_json
