@@ -26,6 +26,38 @@ const _ = require("iotdb-helpers")
 
 const querystring = require("querystring")
 
+/* --- Document --- */
+
+/**
+ */
+const body_document = _.promise(self => {
+    _.promise.validate(self, body_document)
+
+    self.__fetch.bodys = [ self.document ]
+    self.__fetch.headers["content-length"] = Buffer.byteLength(self.__fetch.bodys[0])
+    self.__fetch.headers["content-type"] = "application/octet-stream"
+})
+
+body_document.method = "body.document"
+body_document.description = `
+    Send document in the HTTP request`
+body_document.requires = {
+    __fetch: _.is.Dictionary,
+    document: [ _.is.String, _.is.Buffer ],
+}
+
+/**
+ */
+const body_document_p = (document, document_name) => _.promise((self, done) => {
+    _.promise(self)
+        .add({
+            document: document,
+            document_name: document_name || null,
+        })
+        .then(body_document)
+        .end(done, self, "__fetch")
+})
+
 /* --- JSON --- */
 
 /**
@@ -116,6 +148,8 @@ const body_form_p = form => _.promise((self, done) => {
 /**
  */
 exports.body = {}
+exports.body.document = body_document
+exports.body.document.p = body_document_p
 exports.body.json = body_json
 exports.body.json.p = body_json_p
 exports.body.xml = body_xml

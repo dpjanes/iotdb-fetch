@@ -62,7 +62,7 @@ const document = (http_method, is_document) => paramd => _.promise((self, done) 
         .conditional(paramd.accept, fetch.headers.accept(paramd.accept))
         .conditional(paramd.headers, fetch.headers.p(paramd.headers))
         .conditional(paramd.document, fetch.body.document.p(paramd.document))
-        .then(fetch.go.document)
+        .then(fetch.go)
         .end(done, self, "url,headers,document,document_length,document_media_type,document_encoding,document_name")
 })
 
