@@ -91,7 +91,6 @@ const go = _.promise((self, done) => {
 
         response.on('data', chunk => {
             self.document = Buffer.concat([ self.document, chunk ])
-
         });
         response.on('end', () => {
             // in some future version, look for iconv-lite
@@ -110,13 +109,31 @@ const go = _.promise((self, done) => {
             self.document_length = _.coerce.to.Integer(response.headers['content-length'], self.document.length)
             self.url = url.href
 
-            done(null, self)
-            done = _.noop
+            switch (Math.floor(self.headers.status / 100)) {
+            case 4:
+            case 5:
+                const error = new errors.Unavailable(`${url.hostname}: status ${self.headers.status}`)
+                error.statusCode = self.headers.status
+                error.self = self
+
+                done(error, self)
+                done = _.noop
+                break;
+
+            default:
+                done(null, self)
+                done = _.noop
+            }
         });
 
     })
 
     request.on("error", error => {
+        if (error.code === 'ENOTFOUND') {
+            error = new errors.HostNotFound()
+            error.self = self;
+        }
+
         done(error)
         done = _.noop
     })
@@ -146,15 +163,27 @@ const go_json = _.promise((self, done) => {
     _.promise(self)
         .make(sd => {
             self.__fetch.headers["content-type"] = "application/json"
-            sd.json = null;
         })
         .then(go)
         .make(sd => {
-            if (Math.floor(sd.headers.status / 100) === 3) {
-                return
-            }
+            sd.json = null;
 
-            sd.json = JSON.parse(sd.document)
+            switch (Math.floor(sd.headers.status / 100)) {
+            case 3:
+                break
+
+            case 2:
+                sd.json = JSON.parse(sd.document)
+                break
+
+            default:
+                // forgive non-JSON here (acutally probably never get here)
+                try {
+                    sd.json = JSON.parse(sd.document)
+                } catch (x) {
+                }
+                break
+            }
         })
         .end(done, self, "json,headers,url")
 })
