@@ -1,5 +1,5 @@
 /*
- *  nlib/json.js
+ *  nlib/document.js
  *
  *  David Janes
  *  IOTDB.org
@@ -30,7 +30,7 @@ const assert = require("assert");
 /**
  *  Paramaterized superfunction - do everything at once
  */
-const json = (http_method, is_json) => paramd => _.promise((self, done) => {
+const document = (http_method, is_document) => paramd => _.promise((self, done) => {
     const fetch = require("..")
 
     if (!paramd) {
@@ -42,17 +42,17 @@ const json = (http_method, is_json) => paramd => _.promise((self, done) => {
     } else if (_.is.Dictionary(paramd)) {
         paramd = _.promise.clone(paramd)
     } else {
-        assert.ok(false, `${json.method}: must be paramaterized with String or Dictionary`)
+        assert.ok(false, `${document.method}: must be paramaterized with String or Dictionary`)
     }
 
     paramd.method = paramd.method || http_method;
 
-    [ "bearer_token", "accept", "headers", "json", ].forEach(key => {
+    [ "bearer_token", "accept", "headers", "document", ].forEach(key => {
         if (paramd[key] !== true) {
             return;
         }
 
-        assert.ok(self[key], `${json.method}: expected self.${key} because of paramd.${key} == true`);
+        assert.ok(self[key], `${document.method}: expected self.${key} because of paramd.${key} == true`);
         paramd[key] = self[key];
     })
 
@@ -61,14 +61,14 @@ const json = (http_method, is_json) => paramd => _.promise((self, done) => {
         .conditional(paramd.bearer_token, fetch.headers.authorization.bearer(paramd.bearer_token))
         .conditional(paramd.accept, fetch.headers.accept(paramd.accept))
         .conditional(paramd.headers, fetch.headers.p(paramd.headers))
-        .conditional(paramd.json, fetch.body.json.p(paramd.json))
-        .then(fetch.go.json)
-        .end(done, self, "url,json,headers")
+        .conditional(paramd.document, fetch.body.document.p(paramd.document))
+        .then(fetch.go.document)
+        .end(done, self, "url,headers,document,document_length,document_media_type,document_encoding,document_name")
 })
 
-json.method = "json"
-json.description = `Parameterized fetch JSON`
-json.requires = {
+document.method = "document"
+document.description = `Parameterized fetch`
+document.requires = {
     __fetch: {
         method: _.is.String,
         url: _.is.AbsoluteURL,
@@ -80,8 +80,8 @@ json.requires = {
 /**
  *  API - note that these are _all_ still parameterized
  */
-exports.json = json("get", true)
+exports.document = document("get", true)
 
 ;[ "get", "put", "patch", "post", "delete", "head" ].forEach(method_name => {
-    exports.json[method_name] = json(method_name, true)
+    exports.document[method_name] = document(method_name, true)
 })
