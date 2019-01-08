@@ -514,6 +514,7 @@ describe("document", function() {
                 .then(_.promise.done(done))
                 .catch(done)
         })
+        /*
         it("works - file (boolean flag, string text file)", function(done) {
             _.promise.make(self)
                 .then(fs.read.p(path.join(__dirname, "data", "document.txt"), "utf-8"))
@@ -586,5 +587,6 @@ describe("document", function() {
                 .then(_.promise.done(done))
                 .catch(done)
         })
+        */
     })
 })

@@ -25,6 +25,7 @@
 const _ = require("iotdb-helpers")
 
 const querystring = require("querystring")
+const path = require("path")
 
 /* --- Document --- */
 
@@ -33,9 +34,30 @@ const querystring = require("querystring")
 const body_document = _.promise(self => {
     _.promise.validate(self, body_document)
 
-    self.__fetch.bodys = [ self.document ]
+    const CRLF = "\r\n"
+    const boundary = `--${_.random.id(32)}`
+    const delimeter_open = `${CRLF}--${boundary}`
+    const delimeter_close = `${delimeter_open}--`
+    const body_headers = [
+        `Content-Disposition: form-data; name="file"; filename="${path.basename(self.document_name)}"` + CRLF
+    ]
+
+    const body = Buffer.concat([
+        Buffer.from(delimeter_open + CRLF + body_headers.join('') + CRLF),
+        _.is.String(self.document) ? Buffer.from(self.document, "utf-8") : self.document,
+        Buffer.from(delimeter_close)
+    ]);
+
+    self.__fetch.bodys = [ body ]
     self.__fetch.headers["content-length"] = Buffer.byteLength(self.__fetch.bodys[0])
-    self.__fetch.headers["content-type"] = "application/octet-stream"
+    self.__fetch.headers["content-type"] = `multipart/form-data; boundary=${boundary}`
+
+    /*
+    console.log("HERE:XXX.1", self.__fetch)
+    console.log("HERE:XXX.2", delimeter_open + CRLF + body_headers.join('') + CRLF)
+    console.log("HERE:XXX.3", self.document)
+    // process.exit()
+    */
 })
 
 body_document.method = "body.document"
@@ -44,6 +66,7 @@ body_document.description = `
 body_document.requires = {
     __fetch: _.is.Dictionary,
     document: [ _.is.String, _.is.Buffer ],
+    document_name: _.is.String,
 }
 
 /**
@@ -52,7 +75,7 @@ const body_document_p = (document, document_name) => _.promise((self, done) => {
     _.promise(self)
         .add({
             document: document,
-            document_name: document_name || null,
+            document_name: document_name || "document.dat",
         })
         .then(body_document)
         .end(done, self, "__fetch")

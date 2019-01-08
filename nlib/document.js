@@ -20,12 +20,12 @@
  *  limitations under the License.
  */
 
-"use strict";
+"use strict"
 
-const _ = require("iotdb-helpers");
-const errors = require("iotdb-errors");
+const _ = require("iotdb-helpers")
+const errors = require("iotdb-errors")
 
-const assert = require("assert");
+const assert = require("assert")
 
 /**
  *  Paramaterized superfunction - do everything at once
@@ -47,7 +47,7 @@ const document = (http_method, is_document) => paramd => _.promise((self, done) 
 
     paramd.method = paramd.method || http_method;
 
-    [ "bearer_token", "accept", "headers", "document", ].forEach(key => {
+    [ "bearer_token", "accept", "headers", "document", "form", "json", ].forEach(key => {
         if (paramd[key] !== true) {
             return;
         }
@@ -61,7 +61,9 @@ const document = (http_method, is_document) => paramd => _.promise((self, done) 
         .conditional(paramd.bearer_token, fetch.headers.authorization.bearer(paramd.bearer_token))
         .conditional(paramd.accept, fetch.headers.accept(paramd.accept))
         .conditional(paramd.headers, fetch.headers.p(paramd.headers))
-        .conditional(paramd.document, fetch.body.document.p(paramd.document))
+        .conditional(paramd.form, fetch.body.form.p(paramd.form))
+        .conditional(paramd.json, fetch.body.json.p(paramd.json))
+        .conditional(paramd.document, fetch.body.document.p(paramd.document, paramd.document_name || self.document_name))
         .then(fetch.go)
         .end(done, self, "url,headers,document,document_length,document_media_type,document_encoding,document_name")
 })
