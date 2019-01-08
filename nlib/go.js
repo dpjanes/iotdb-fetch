@@ -121,6 +121,10 @@ const go = _.promise((self, done) => {
         done = _.noop
     })
 
+    self.__fetch.bodys.forEach(body => {
+        request.write(body) 
+    })
+
     request.end()
 })
 
@@ -130,6 +134,7 @@ go.requires = {
     __fetch: {
         method: _.is.String,
         url: _.is.AbsoluteURL,
+        bodys: _.is.Array,
     },
 }
 

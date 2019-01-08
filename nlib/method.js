@@ -34,6 +34,7 @@ const method = METHOD => _.promise(self => {
         url: self.url,
         query: self.query || {},
         headers: {},
+        bodys: null,
     }
 })
 
@@ -70,7 +71,11 @@ const method_go = METHOD => _.promise((self, done) => {
 })
 
 /**
+ *  API
  */
-exports.get = method("GET")
-exports.get.p = method_p("GET")
-exports.get.go = method_go("GET")
+;[ "get", "put", "patch", "post", "delete", "head" ].forEach(method_name => {
+    const METHOD_NAME = method_name.toUpperCase()
+    exports[method_name] = method(METHOD_NAME)
+    exports[method_name].p = method_p(METHOD_NAME)
+    exports[method_name].go = method_go(METHOD_NAME)
+})

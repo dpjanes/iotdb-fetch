@@ -1,11 +1,11 @@
 /*
- *  samples/post_json.js
+ *  lib/body.js
  *
  *  David Janes
  *  IOTDB.org
- *  2017-09-03
+ *  2019-01-07
  *
- *  Copyright [2013-2017] [David P. Janes]
+ *  Copyright [2013-2019] David P. Janes
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,30 +20,30 @@
  *  limitations under the License.
  */
 
-"use strict";
+"use strict"
 
-const _ = require("iotdb-helpers");
-
-const fetch = require("../nlib")
+const _ = require("iotdb-helpers")
 
 /**
- *  POST with JSON payload
  */
-_.promise.make({
-    // url: "https://jsonplaceholder.typicode.com/posts",
-    url: "http://mockbin.com/request",
-    json: {
-        a: 1,
-        b: "two",
-        c: [ 3, "four", ],
-    },
+const body_json = _.promise(self => {
+    _.promise.validate(self, body_json)
+
+    self.__fetch.bodys = [ JSON.stringify(self.json) ]
+    self.__fetch.headers["content-length"] = Buffer.byteLength(self.__fetch.bodys[0])
+    self.__fetch.headers["content-type"] = "application/json"
 })
-    .then(fetch.post)
-    .then(fetch.body.json)
-    .then(fetch.go.json)
-    .then(_.promise.make(sd => {
-        console.log("+", "final url", sd.url, sd.json)
-    }))
-    .catch(error => {
-        console.log("#", error)
-    })
+
+body_json.method = "body.json"
+body_json.description = `
+    Send JSON in the HTTP request`
+body_json.requires = {
+    __fetch: _.is.Dictionary,
+    json: _.is.JSON,
+}
+
+/**
+ */
+exports.body = {
+    json: body_json,
+}
