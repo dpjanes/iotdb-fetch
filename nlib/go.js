@@ -57,7 +57,13 @@ const go = _.promise((self, done) => {
         headers: self.__fetch.headers,
     }
 
-    const request = processor.request(self.__fetch.url, options, response => {
+    if (self.__fetch.query) {
+        _.mapObject(self.__fetch.query, (value, key) => {
+            url.searchParams.set(key, value)
+        })
+    }
+
+    const request = processor.request(url, options, response => {
         self.headers = response.headers
         self.headers.status = response.statusCode
 
@@ -102,6 +108,7 @@ const go = _.promise((self, done) => {
             }
 
             self.document_length = _.coerce.to.Integer(response.headers['content-length'], self.document.length)
+            self.url = url.href
 
             done(null, self)
             done = _.noop

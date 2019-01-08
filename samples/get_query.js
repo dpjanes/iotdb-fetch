@@ -24,7 +24,7 @@
 
 const _ = require("iotdb-helpers");
 
-const fetch = require("..")
+const fetch = require("../nlib")
 
 /**
  *  Demonstrate adding query parameters to a URL
