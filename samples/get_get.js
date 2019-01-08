@@ -24,7 +24,7 @@
 
 const _ = require("iotdb-helpers");
 
-const fetch = require("..")
+const fetch = require("../nlib")
 
 /**
  *  Straight up get

@@ -38,7 +38,7 @@ const method = METHOD => _.promise(self => {
 
 method.method = "method"
 method.description = `
-    Do a HTTP/HTTPS method (parameterized)`
+    Setup a HTTP/HTTPS call (parameterized by METHOD)`
 method.requires = {
     url: _.is.AbsoluteURL,
 }
