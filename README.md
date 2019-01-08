@@ -32,3 +32,9 @@ Get a JSON document. The result will be an Object
         .make(sd => {
             assert.ok(_.is.JSON(sd.json))
         })
+
+# Contrib
+
+Some third party code is directly included, to avoid package dependencies
+
+* https://github.com/jshttp/content-type

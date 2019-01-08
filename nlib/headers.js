@@ -52,9 +52,9 @@ headers.requires = {
 /**
  *  Parameterized 
  */
-const headers_p = headers => _.promise((self, done) => {
+const headers_p = _headers => _.promise((self, done) => {
     _.promise(self)
-        .add(sd, "headers")
+        .add("headers", _headers)
         .then(headers)
         .end(done, self, "__fetch")
 })

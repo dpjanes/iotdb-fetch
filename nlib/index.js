@@ -26,6 +26,7 @@ module.exports = Object.assign(
     {},
     require("./body"),
     require("./cache"),
+    require("./document"),
     require("./headers"),
     require("./json"),
     require("./go"),

@@ -34,7 +34,7 @@ const method = METHOD => _.promise(self => {
         url: self.url,
         query: self.query || {},
         headers: {},
-        bodys: null,
+        bodys: [],
     }
 })
 
@@ -56,7 +56,7 @@ const method_p = METHOD => (url, query) => _.promise((self, done) => {
             "url": url,
             "query": query || null,
         })
-        .then(exports.method(METHOD))
+        .then(method(METHOD))
         .end(done, self, "__fetch")
 })
 
