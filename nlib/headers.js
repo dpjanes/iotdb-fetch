@@ -20,14 +20,9 @@
  *  limitations under the License.
  */
 
-"use strict";
+"use strict"
 
-const _ = require("iotdb-helpers");
-const errors = require("iotdb-errors");
-
-const unirest = require("unirest");
-
-const assert = require("assert");
+const _ = require("iotdb-helpers")
 
 /**
  */
