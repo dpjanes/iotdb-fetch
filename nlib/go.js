@@ -27,7 +27,7 @@ const errors = require("iotdb-errors")
 
 const http = require("http")
 const https = require("https")
-const url = require("url").URL
+const URL = require("url").URL
 const path = require("path")
 
 const content_type = require("../contrib/content-type")
