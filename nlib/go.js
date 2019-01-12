@@ -129,7 +129,6 @@ const go = _.promise((self, done) => {
     })
 
     request.on("error", error => {
-console.log("HERE:B.1")
         if (error.code === 'ENOTFOUND') {
             error = new errors.HostNotFound()
             error.self = self;
