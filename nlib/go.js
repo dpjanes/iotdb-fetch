@@ -26,7 +26,10 @@ const _ = require("iotdb-helpers")
 const errors = require("iotdb-errors")
 
 const http = require("http")
+const http_request = http.request
 const https = require("https")
+const https_request = https.request
+
 const URL = require("url").URL
 const path = require("path")
 
@@ -41,11 +44,11 @@ const go = _.promise((self, done) => {
     const url = new URL(self.__fetch.url)
     switch (url.protocol) {
     case "http:":
-        processor = http
+        processor = http_request
         break
 
     case "https:":
-        processor = https
+        processor = https_request
         break
 
     default:
@@ -54,7 +57,7 @@ const go = _.promise((self, done) => {
 
     const options = {
         method: self.__fetch.method,
-        headers: self.__fetch.headers,
+        headers: Object.assign({}, self.__fetch.headers),
     }
 
     if (self.__fetch.query) {
@@ -63,7 +66,10 @@ const go = _.promise((self, done) => {
         })
     }
 
-    const request = processor.request(url, options, response => {
+    url.method = options.method
+    url.headers = options.headers
+
+    const request = processor(url.toString(), options, response => {
         self.headers = response.headers
         self.headers.status = response.statusCode
 
@@ -126,16 +132,6 @@ const go = _.promise((self, done) => {
             }
         });
 
-    })
-
-    request.on("error", error => {
-        if (error.code === 'ENOTFOUND') {
-            error = new errors.HostNotFound()
-            error.self = self;
-        }
-
-        done(error)
-        done = _.noop
     })
 
     self.__fetch.bodys.forEach(body => {
