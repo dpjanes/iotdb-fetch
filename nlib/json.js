@@ -57,7 +57,7 @@ const json = (http_method, is_json) => paramd => _.promise((self, done) => {
     })
 
     _.promise(self)
-        .then(fetch[http_method].p(paramd.url, paramd.query || {}))
+        .then(fetch[http_method].p(paramd.url || self.url, paramd.query || {}))
         .conditional(paramd.bearer_token, fetch.headers.authorization.bearer(paramd.bearer_token))
         .conditional(paramd.accept, fetch.headers.accept(paramd.accept))
         .conditional(paramd.headers, fetch.headers.p(paramd.headers))
