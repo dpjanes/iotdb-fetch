@@ -28,13 +28,14 @@ const errors = require("iotdb-errors");
 const assert = require("assert");
 
 /**
- *  Paramaterized superfunction - do everything at once
  */
-const json = (http_method, is_json) => paramd => _.promise((self, done) => {
+const json = http_method => paramd => _.promise((self, done) => {
     const fetch = require("..")
 
     if (!paramd) {
-        paramd = {}
+        paramd = {
+            url: null,
+        }
     } else if (_.is.String(paramd)) {
         paramd = {
             url: paramd,
@@ -47,7 +48,7 @@ const json = (http_method, is_json) => paramd => _.promise((self, done) => {
 
     paramd.method = paramd.method || http_method;
 
-    [ "bearer_token", "accept", "headers", "json", ].forEach(key => {
+    [ "bearer_token", "accept", "headers", "json", "url", ].forEach(key => {
         if (paramd[key] !== true) {
             return;
         }
@@ -67,21 +68,27 @@ const json = (http_method, is_json) => paramd => _.promise((self, done) => {
 })
 
 json.method = "json"
-json.description = `Parameterized fetch JSON`
+json.description = `Fetch JSON (parameterized)
+    
+    If !paramd, or paramd.url is null or true, self.url is used instead
+    If paramd.{bearer_token,accept,headers,json} are true, self.* is used instead
+`
 json.requires = {
-    __fetch: {
-        method: _.is.String,
-        url: _.is.AbsoluteURL,
-        bodys: _.is.Array,
-    },
+}
+json.accepts = {
+    url: _.is.String,
+    json: _.is.JSON,
+    headers: _.is.Dictionary,
 }
 
 
 /**
  *  API - note that these are _all_ still parameterized
  */
-exports.json = json("get", true)
+exports.json = json("get")
+exports.json.method = "json"
 
 ;[ "get", "put", "patch", "post", "delete", "head" ].forEach(method_name => {
-    exports.json[method_name] = json(method_name, true)
+    exports.json[method_name] = json(method_name)
+    exports.json[method_name].method = "json." + method_name
 })

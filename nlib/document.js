@@ -28,13 +28,14 @@ const errors = require("iotdb-errors")
 const assert = require("assert")
 
 /**
- *  Paramaterized superfunction - do everything at once
  */
-const document = (http_method, is_document) => paramd => _.promise((self, done) => {
+const document = http_method => paramd => _.promise((self, done) => {
     const fetch = require("..")
 
     if (!paramd) {
-        paramd = {}
+        paramd = {
+            url: null,
+        }
     } else if (_.is.String(paramd)) {
         paramd = {
             url: paramd,
@@ -47,7 +48,7 @@ const document = (http_method, is_document) => paramd => _.promise((self, done) 
 
     paramd.method = paramd.method || http_method;
 
-    [ "bearer_token", "accept", "headers", "document", "form", "json", ].forEach(key => {
+    [ "bearer_token", "accept", "headers", "document", "form", "json", "url", ].forEach(key => {
         if (paramd[key] !== true) {
             return;
         }
@@ -57,7 +58,7 @@ const document = (http_method, is_document) => paramd => _.promise((self, done) 
     })
 
     _.promise(self)
-        .then(fetch[http_method].p(paramd.url, paramd.query || {}))
+        .then(fetch[http_method].p(paramd.url || self.url, paramd.query || {}))
         .conditional(paramd.bearer_token, fetch.headers.authorization.bearer(paramd.bearer_token))
         .conditional(paramd.accept, fetch.headers.accept(paramd.accept))
         .conditional(paramd.headers, fetch.headers.p(paramd.headers))
@@ -69,21 +70,32 @@ const document = (http_method, is_document) => paramd => _.promise((self, done) 
 })
 
 document.method = "document"
-document.description = `Parameterized fetch`
+document.description = `Fetch Document (parameterized)
+    
+    If !paramd, or paramd.url is null or true, self.url is used instead
+    If paramd.{bearer_token,accept,headers,json} are true, self.* is used instead
+`
 document.requires = {
-    __fetch: {
-        method: _.is.String,
-        url: _.is.AbsoluteURL,
-        bodys: _.is.Array,
-    },
+}
+document.requires = {
+    url: _.is.String,
+    headers: _.is.Dictionary,
+
+    document: [ _.is.Buffer, _.is.String ],
+    document_encoding: _.is.String,
+    document_name: _.is.String,
+    document_media_type: _.is.String,
+    document_length: _.is.Integer,
 }
 
 
 /**
  *  API - note that these are _all_ still parameterized
  */
-exports.document = document("get", true)
+exports.document = document("get")
+exports.document.method = "document"
 
 ;[ "get", "put", "patch", "post", "delete", "head" ].forEach(method_name => {
-    exports.document[method_name] = document(method_name, true)
+    exports.document[method_name] = document(method_name)
+    exports.document[method_name].method = "document." + method_name
 })
