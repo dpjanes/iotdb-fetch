@@ -77,7 +77,7 @@ document.description = `Fetch Document (parameterized)
 `
 document.requires = {
 }
-document.requires = {
+document.produces = {
     url: _.is.String,
     headers: _.is.Dictionary,
 
@@ -90,11 +90,14 @@ document.requires = {
 
 
 /**
- *  API - note that these are _all_ still parameterized
+ *  API - note root is not parameterized
  */
-exports.document = document("get")
-exports.document.method = "document"
+exports.document = document("get")(null)
+exports.document.method = "GET Document by URL"
 
+/**
+ *  these are parameterized
+ */
 ;[ "get", "put", "patch", "post", "delete", "head" ].forEach(method_name => {
     exports.document[method_name] = document(method_name)
     exports.document[method_name].method = "document." + method_name

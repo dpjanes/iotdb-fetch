@@ -75,7 +75,7 @@ json.description = `Fetch JSON (parameterized)
 `
 json.requires = {
 }
-json.accepts = {
+json.produces = {
     url: _.is.String,
     json: _.is.JSON,
     headers: _.is.Dictionary,
@@ -83,11 +83,18 @@ json.accepts = {
 
 
 /**
- *  API - note that these are _all_ still parameterized
+ *  API - note root is not parameterized
  */
-exports.json = json("get")
+exports.json = json("get")(null)
 exports.json.method = "json"
+exports.json.description = `GET JSON by URL`
+exports.json.required = {
+    url: _.is.AbsoluteURL,
+}
 
+/*
+ *  these are parameterized
+ */
 ;[ "get", "put", "patch", "post", "delete", "head" ].forEach(method_name => {
     exports.json[method_name] = json(method_name)
     exports.json[method_name].method = "json." + method_name

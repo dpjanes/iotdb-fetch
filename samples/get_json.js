@@ -29,12 +29,10 @@ const fetch = require("..")
 /**
  *  Straight up get
  */
-_.promise.make({
+_.promise({
     url: "https://jsonplaceholder.typicode.com/posts/1",
 })
-    .then(fetch.get)
-    .then(fetch.cache.disk)
-    .then(fetch.go.json)
+    .then(fetch.json)
     .then(sd => {
         console.log("+", "final url", sd.url, sd.json)
     })
