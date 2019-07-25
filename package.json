@@ -5,7 +5,7 @@
     }, 
     "dependencies": {
         "iotdb-errors": "~3.1.8", 
-        "iotdb-helpers": "~3.3.10"
+        "iotdb-helpers": "~3.3.11"
     }, 
     "description": "Pipe oriented URL functions with caching", 
     "homepage": "https://github.com/dpjanes/node-iotdb", 
@@ -21,5 +21,5 @@
         "cover": "istanbul cover _mocha -- --recursive", 
         "test": "mocha"
     }, 
-    "version": "1.1.7"
+    "version": "1.2.1"
 }
