@@ -169,7 +169,10 @@ const go_json = _.promise((self, done) => {
                 break
 
             case 2:
-                sd.json = JSON.parse(sd.document)
+                // empty document is null - happens e.g. HEAD
+                if (!_.is.Empty(sd.document)) {
+                    sd.json = JSON.parse(sd.document)
+                }
                 break
 
             default:

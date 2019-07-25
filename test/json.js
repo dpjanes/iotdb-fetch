@@ -53,7 +53,7 @@ describe("document", function() {
     describe("bad", function() {
         it("number", function(done) {
             _.promise.make(self)
-                .then(fetch.json(10))
+                .then(fetch.json.get(10))
                 .then(_util.auto_fail(done))
                 .catch(_util.ok_error(done));
         })
@@ -61,7 +61,7 @@ describe("document", function() {
     describe("get", function() {
         it("works - raw URL", function(done) {
             _.promise.make(self)
-                .then(fetch.json(self.server_url + "/index.json"))
+                .then(fetch.json.get(self.server_url + "/index.json"))
                 .then(_.promise.make(sd => {
                     assert.ok(_.is.AbsoluteURL(sd.url))
                     assert.deepEqual(sd.json, { method: 'GET', route: '/index.json' });
@@ -77,7 +77,7 @@ describe("document", function() {
         })
         it("works - URL", function(done) {
             _.promise.make(self)
-                .then(fetch.json({
+                .then(fetch.json.get({
                     url: self.server_url + "/index.json",
                 }))
                 .then(_.promise.make(sd => {
@@ -95,7 +95,7 @@ describe("document", function() {
         })
         it("works - bearer token", function(done) {
             _.promise.make(self)
-                .then(fetch.json({
+                .then(fetch.json.get({
                     url: self.server_url + "/index.json",
                     bearer_token: "abcde",
                 }))

@@ -53,7 +53,7 @@ describe("document", function() {
     describe("bad", function() {
         it("number", function(done) {
             _.promise.make(self)
-                .then(fetch.document(10))
+                .then(fetch.document.get(10))
                 .then(_util.auto_fail(done))
                 .catch(_util.ok_error(done));
         })
@@ -61,7 +61,7 @@ describe("document", function() {
     describe("get", function() {
         it("works - raw URL (HTML)", function(done) {
             _.promise.make(self)
-                .then(fetch.document(self.server_url + "/index.html"))
+                .then(fetch.document.get(self.server_url + "/index.html"))
                 .then(_.promise.make(sd => {
                     assert.ok(sd.url)
                     assert.ok(sd.document.indexOf("<h1>index.html (GET)</h1>") > -1)
@@ -79,7 +79,7 @@ describe("document", function() {
         })
         it("works - just URL (HTML)", function(done) {
             _.promise.make(self)
-                .then(fetch.document({
+                .then(fetch.document.get({
                     url: self.server_url + "/index.html",
                 }))
                 .then(_.promise.make(sd => {
@@ -99,7 +99,7 @@ describe("document", function() {
         })
         it("works - just URL (TXT)", function(done) {
             _.promise.make(self)
-                .then(fetch.document({
+                .then(fetch.document.get({
                     url: self.server_url + "/index.txt",
                 }))
                 .then(_.promise.make(sd => {
@@ -122,7 +122,7 @@ describe("document", function() {
                 .then(fs.read.p(path.join(__dirname, "data", "image.png")))
                 .add("document:image")
                 .add("document", null)
-                .then(fetch.document({
+                .then(fetch.document.get({
                     url: self.server_url + "/image.png",
                 }))
                 .then(_.promise.make(sd => {
@@ -143,7 +143,7 @@ describe("document", function() {
         })
         it("works - root URL with Accept", function(done) {
             _.promise.make(self)
-                .then(fetch.document({
+                .then(fetch.document.get({
                     url: self.server_url,
                     accept: "text/html",
                 }))
@@ -164,7 +164,7 @@ describe("document", function() {
         })
         it("works - root URL with Accept as Headers", function(done) {
             _.promise.make(self)
-                .then(fetch.document({
+                .then(fetch.document.get({
                     url: self.server_url,
                     headers: {
                         accept: "text/plain",
@@ -187,7 +187,7 @@ describe("document", function() {
         })
         it("works - URL with query string", function(done) {
             _.promise.make(self)
-                .then(fetch.document({
+                .then(fetch.document.get({
                     url: self.server_url + "/index.html?a=b",
                 }))
                 .then(_.promise.make(sd => {
@@ -208,7 +208,7 @@ describe("document", function() {
         })
         it("works - URL with query object", function(done) {
             _.promise.make(self)
-                .then(fetch.document({
+                .then(fetch.document.get({
                     url: self.server_url + "/index.html",
                     query: {
                         "c": "d",
@@ -232,7 +232,7 @@ describe("document", function() {
         })
         it("works - URL with query string + query object", function(done) {
             _.promise.make(self)
-                .then(fetch.document({
+                .then(fetch.document.get({
                     url: self.server_url + "/index.html?a=b",
                     query: {
                         "c": "d",
@@ -256,7 +256,7 @@ describe("document", function() {
         })
         it("works - bearer token", function(done) {
             _.promise.make(self)
-                .then(fetch.document({
+                .then(fetch.document.get({
                     url: self.server_url + "/index.html",
                     bearer_token: "abcde",
                 }))
