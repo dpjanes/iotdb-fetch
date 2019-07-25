@@ -133,6 +133,10 @@ const go = _.promise((self, done) => {
         });
 
     })
+    request.on("error", error => {
+        done(error)
+        done = _.noop
+    })
 
     self.__fetch.bodys.forEach(body => {
         request.write(body) 
