@@ -49,12 +49,11 @@ const json = http_method => paramd => _.promise((self, done) => {
     paramd.method = paramd.method || http_method;
 
     [ "bearer_token", "accept", "headers", "json", "url", ].forEach(key => {
-        if (paramd[key] !== true) {
+        if ((paramd[key] !== true) && !_.is.Null(paramd[key])) {
             return;
         }
 
-        assert.ok(self[key], `${json.method}: expected self.${key} because of paramd.${key} == true`);
-        paramd[key] = self[key];
+        paramd[key] = self[key] || null
     })
 
     _.promise(self)
@@ -64,14 +63,15 @@ const json = http_method => paramd => _.promise((self, done) => {
         .conditional(paramd.headers, fetch.headers.p(paramd.headers))
         .conditional(paramd.json, fetch.body.json.p(paramd.json))
         .then(fetch.go.json)
-        .end(done, self, "url,json,headers")
+        // .end(done, self, "url,json,headers")
+        .end(done, self, json)
 })
 
 json.method = "json"
 json.description = `Fetch JSON (parameterized)
     
     If !paramd, or paramd.url is null or true, self.url is used instead
-    If paramd.{bearer_token,accept,headers,json} are true, self.* is used instead
+    If paramd.{bearer_token,accept,headers,json} are true or null, self.* is used instead
 `
 json.requires = {
 }

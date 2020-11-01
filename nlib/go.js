@@ -32,6 +32,7 @@ const https_request = https.request
 
 const URL = require("url").URL
 const path = require("path")
+const zlib = require("zlib")
 
 const content_type = require("../contrib/content-type")
 
@@ -99,6 +100,10 @@ const go = _.promise((self, done) => {
             self.document = Buffer.concat([ self.document, chunk ])
         });
         response.on('end', () => {
+            if (response.headers.encoding === "gzip") {
+                self.document = zlib.gunzipSync(response)
+            }
+
             // in some future version, look for iconv-lite
             if (charset) {
                 switch (charset) {

@@ -84,6 +84,27 @@ const body_document_p = (document, document_name) => _.promise((self, done) => {
 /* --- JSON --- */
 
 /**
+ *  NOT FINISHED - likely needs doc conversion
+ */
+const body_raw = _.promise(self => {
+    _.promise.validate(self, body_raw)
+
+    self.__fetch.bodys = [ self.document ]
+    self.__fetch.headers["content-length"] = Buffer.byteLength(self.__fetch.bodys[0])
+    self.__fetch.headers["content-type"] = "application/octet-stream"
+})
+
+body_raw.method = "body.raw"
+body_raw.description = `
+    Send raw document in the HTTP request`
+body_raw.requires = {
+    __fetch: _.is.Dictionary,
+    document: _.is.String,
+}
+
+/* --- JSON --- */
+
+/**
  */
 const body_json = _.promise(self => {
     _.promise.validate(self, body_json)
@@ -173,6 +194,7 @@ const body_form_p = form => _.promise((self, done) => {
 exports.body = {}
 exports.body.document = body_document
 exports.body.document.p = body_document_p
+exports.body.raw = body_raw
 exports.body.json = body_json
 exports.body.json.p = body_json_p
 exports.body.xml = body_xml

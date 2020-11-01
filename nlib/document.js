@@ -34,7 +34,7 @@ const document = http_method => paramd => _.promise((self, done) => {
 
     if (!paramd) {
         paramd = {
-            url: null,
+            url: null, 
         }
     } else if (_.is.String(paramd)) {
         paramd = {
@@ -49,12 +49,11 @@ const document = http_method => paramd => _.promise((self, done) => {
     paramd.method = paramd.method || http_method;
 
     [ "bearer_token", "accept", "headers", "document", "form", "json", "url", ].forEach(key => {
-        if (paramd[key] !== true) {
+        if ((paramd[key] !== true) && !_.is.Null(paramd[key])) {
             return;
         }
 
-        assert.ok(self[key], `${document.method}: expected self.${key} because of paramd.${key} == true`);
-        paramd[key] = self[key];
+        paramd[key] = self[key] || null
     })
 
     _.promise(self)
@@ -66,14 +65,15 @@ const document = http_method => paramd => _.promise((self, done) => {
         .conditional(paramd.json, fetch.body.json.p(paramd.json))
         .conditional(paramd.document, fetch.body.document.p(paramd.document, paramd.document_name || self.document_name))
         .then(fetch.go)
-        .end(done, self, "url,headers,document,document_length,document_media_type,document_encoding,document_name")
+        // .end(done, self, "url,headers,document,document_length,document_media_type,document_encoding,document_name")
+        .end(done, self, document)
 })
 
 document.method = "document"
 document.description = `Fetch Document (parameterized)
     
     If !paramd, or paramd.url is null or true, self.url is used instead
-    If paramd.{bearer_token,accept,headers,json} are true, self.* is used instead
+    If paramd.{bearer_token,accept,headers,json} are true or null, self.* is used instead
 `
 document.requires = {
 }
@@ -87,7 +87,6 @@ document.produces = {
     document_media_type: _.is.String,
     document_length: _.is.Integer,
 }
-
 
 /**
  *  API - note root is not parameterized
