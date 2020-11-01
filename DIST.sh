@@ -34,7 +34,7 @@ echo "=================="
         README.md LICENSE \
         package.json \
         index.js \
-        nlib/*.js \
+        lib/*.js \
         contrib/*.js \
         |
     ( cd "${NPM_DST}" && tar xvf - && npm publish ) || exit 1
