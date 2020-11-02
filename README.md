@@ -1,6 +1,12 @@
 # iotdb-fetch
 Pipe oriented URL fetcher with cache
 
+## Notes
+
+* if you want to be able to deal with unusual
+  (by Node.JS standards) charsets, install
+  `iconv` or `iconv-lite` and this will use it
+
 ## GET
     
 ### Parameterized Quick Functions
