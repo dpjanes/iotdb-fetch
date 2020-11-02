@@ -4,12 +4,14 @@
         "url": "https://github.com/dpjanes/iotdb-fetch/issues"
     }, 
     "dependencies": {
+        "iconv": "~3.0.0", 
+        "iotdb-document": "~1.0.5", 
         "iotdb-errors": "~3.1.9", 
         "iotdb-helpers": "~3.4.22", 
         "zlib": "~1.0.5"
     }, 
     "description": "Pipe oriented URL functions with caching", 
-    "homepage": "https://github.com/dpjanes/node-iotdb", 
+    "homepage": "https://github.com/dpjanes/iotdb-fetch", 
     "license": "Apache-2.0", 
     "main": "index.js", 
     "name": "iotdb-fetch", 

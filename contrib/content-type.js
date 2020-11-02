@@ -139,7 +139,7 @@ function parse (string) {
 
     while ((match = PARAM_REGEXP.exec(header))) {
       if (match.index !== index) {
-        throw new TypeError('invalid parameter format')
+        // DPJ be forgiving: throw new TypeError('invalid parameter format')
       }
 
       index += match[0].length
@@ -157,7 +157,7 @@ function parse (string) {
     }
 
     if (index !== header.length) {
-      throw new TypeError('invalid parameter format')
+      // DPJ be forgiving: throw new TypeError('invalid parameter format')
     }
   }
 
