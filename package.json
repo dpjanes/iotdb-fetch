@@ -6,7 +6,7 @@
     "dependencies": {
         "iotdb-document": "~1.0.5", 
         "iotdb-errors": "~3.1.9", 
-        "iotdb-helpers": "~3.4.22", 
+        "iotdb-helpers": "~3.4.23", 
         "zlib": "~1.0.5"
     }, 
     "description": "Pipe oriented URL functions with caching", 
@@ -23,5 +23,5 @@
         "cover": "istanbul cover _mocha -- --recursive", 
         "test": "mocha"
     }, 
-    "version": "1.3.1"
+    "version": "1.3.2"
 }
