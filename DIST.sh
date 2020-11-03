@@ -31,9 +31,12 @@ echo "=================="
 
     tar cf - \
         --exclude "node_modules" \
+        --exclude "xx*" \
+        --exclude "yy*" \
         README.md LICENSE \
         package.json \
         index.js \
+        logger.js \
         lib/*.js \
         contrib/*.js \
         |
