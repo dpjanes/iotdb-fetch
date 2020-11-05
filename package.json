@@ -4,7 +4,7 @@
         "url": "https://github.com/dpjanes/iotdb-fetch/issues"
     }, 
     "dependencies": {
-        "iotdb-document": "~1.0.5", 
+        "iotdb-document": "~1.0.8", 
         "iotdb-errors": "~3.1.9", 
         "iotdb-helpers": "~3.4.23", 
         "zlib": "~1.0.5"
@@ -23,5 +23,5 @@
         "cover": "istanbul cover _mocha -- --recursive", 
         "test": "mocha"
     }, 
-    "version": "1.3.2"
+    "version": "1.3.3"
 }
