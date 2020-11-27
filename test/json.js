@@ -32,7 +32,7 @@ const path = require("path")
 
 const _util = require("./_util")
 
-describe("document", function() {
+describe("json", function() {
     let self = {};
 
     before(function(done) {
@@ -62,36 +62,34 @@ describe("document", function() {
         it("works - raw URL", function(done) {
             _.promise.make(self)
                 .then(fetch.json.get(self.server_url + "/index.json"))
-                .then(_.promise.make(sd => {
+                .make(sd => {
                     assert.ok(_.is.AbsoluteURL(sd.url))
                     assert.deepEqual(sd.json, { method: 'GET', route: '/index.json' });
-                }))
+                })
                 .then(simulator.last_request)
-                .then(_.promise.make(sd => {
+                .make(sd => {
                     assert.ok(sd.last_request);
                     assert.deepEqual(sd.last_request.url, "/index.json")
                     assert.deepEqual(sd.last_request.method, "GET");
-                }))
-                .then(_.promise.done(done))
-                .catch(done)
+                })
+                .end(done, {})
         })
         it("works - URL", function(done) {
             _.promise.make(self)
                 .then(fetch.json.get({
                     url: self.server_url + "/index.json",
                 }))
-                .then(_.promise.make(sd => {
+                .make(sd => {
                     assert.ok(_.is.AbsoluteURL(sd.url))
                     assert.deepEqual(sd.json, { method: 'GET', route: '/index.json' });
-                }))
+                })
                 .then(simulator.last_request)
-                .then(_.promise.make(sd => {
+                .make(sd => {
                     assert.ok(sd.last_request);
                     assert.deepEqual(sd.last_request.url, "/index.json")
                     assert.deepEqual(sd.last_request.method, "GET");
-                }))
-                .then(_.promise.done(done))
-                .catch(done)
+                })
+                .end(done, {})
         })
         it("works - bearer token", function(done) {
             _.promise.make(self)
@@ -99,19 +97,18 @@ describe("document", function() {
                     url: self.server_url + "/index.json",
                     bearer_token: "abcde",
                 }))
-                .then(_.promise.make(sd => {
+                .make(sd => {
                     assert.ok(_.is.AbsoluteURL(sd.url))
                     assert.deepEqual(sd.json, { method: 'GET', route: '/index.json' });
-                }))
+                })
                 .then(simulator.last_request)
-                .then(_.promise.make(sd => {
+                .make(sd => {
                     assert.ok(sd.last_request);
                     assert.deepEqual(sd.last_request.url, "/index.json")
                     assert.deepEqual(sd.last_request.method, "GET");
                     assert.deepEqual(sd.last_request.headers.authorization, 'Bearer abcde')
-                }))
-                .then(_.promise.done(done))
-                .catch(done)
+                })
+                .end(done, {})
         })
     })
 })
